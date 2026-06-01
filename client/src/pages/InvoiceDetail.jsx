@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { useSocket } from '../context/SocketContext';
 
-/* ── Status helpers ──────────────────────────────────────────── */
+/* Status helpers */
 const STATUS_META = {
   paid:      { badge: 'badge-success', label: 'Paid',      accent: 'var(--success-text)' },
   sent:      { badge: 'badge-info',    label: 'Sent',      accent: 'var(--info-text)' },
@@ -33,7 +33,7 @@ export default function InvoiceDetail() {
   const [downloading, setDownloading] = useState(false);
   const { socket } = useSocket();
 
-  /* ── Load invoice ────────────────────────────────────────── */
+  /* Load invoice */
   const load = async () => {
     try {
       const res = await api.get(`/invoices/${id}`);
@@ -57,7 +57,7 @@ export default function InvoiceDetail() {
     return () => socket.off('invoice_updated', handleUpdate);
   }, [socket, id]);
 
-  /* ── Handle Stripe return ────────────────────────────────── */
+  /* Handle Stripe return */
   const hasToasted = useRef(false);
   
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function InvoiceDetail() {
     }
   }, [searchParams, navigate]);
 
-  /* ── Req 2: Pay Invoice — double-click proof ─────────────── */
+  /* Pay Invoice */
   const handlePay = async () => {
     if (paying) return;            // guard: already processing
     setPaying(true);               // lock button immediately
@@ -91,7 +91,7 @@ export default function InvoiceDetail() {
     }
   };
 
-  /* ── Req 3: Download PDF — native browser download ───────── */
+  /* Download PDF */
   const handleDownloadPdf = async () => {
     setDownloading(true);
     try {
@@ -115,7 +115,7 @@ export default function InvoiceDetail() {
     } finally { setDownloading(false); }
   };
 
-  /* ── Loading / error states ──────────────────────────────── */
+  /* Loading / error states */
   if (loading) return <div className="loading"><div className="spinner" /></div>;
   if (!invoice) return null;
 
@@ -123,10 +123,10 @@ export default function InvoiceDetail() {
   const canPay   = !isAdmin && invoice.status !== 'paid' && invoice.status !== 'cancelled';
   const isOverdue = invoice.dueDate && new Date(invoice.dueDate) < new Date() && invoice.status !== 'paid';
 
-  /* ── Render ──────────────────────────────────────────────── */
+  /* Render */
   return (
     <div className="animate-slide-in">
-      {/* ── Page header ───────────────────────────────────────── */}
+      {/* Page header */}
       <div className="page-header">
         <div className="flex items-center gap-3">
           <button className="btn btn-secondary btn-icon btn-sm" onClick={() => navigate('/invoices')}>
@@ -142,7 +142,7 @@ export default function InvoiceDetail() {
 
         {/* Action buttons */}
         <div className="flex gap-2">
-          {/* Req 3: Download PDF button */}
+          {/* Download PDF button */}
           <button
             id="download-pdf-btn"
             className="btn btn-secondary"
@@ -155,7 +155,7 @@ export default function InvoiceDetail() {
             }
           </button>
 
-          {/* Req 2: Pay Invoice button — disabled instantly on click */}
+          {/* Pay Invoice button — disabled instantly on click */}
           {canPay && (
             <button
               id="pay-invoice-btn"
@@ -174,7 +174,7 @@ export default function InvoiceDetail() {
 
       <div className="invoice-layout">
 
-        {/* ── Main invoice document ─────────────────────────────── */}
+        {/* Main invoice document */}
         <div>
           {/* Invoice header card */}
           <div className="card" style={{ marginBottom: '1.25rem', position: 'relative', overflow: 'hidden' }}>
@@ -305,7 +305,7 @@ export default function InvoiceDetail() {
           )}
         </div>
 
-        {/* ── Sidebar: total + payment ──────────────────────────── */}
+        {/* Sidebar: total + payment */}
         <div>
           {/* Total card */}
           <div className="card" style={{ marginBottom: '1.25rem', textAlign: 'center' }}>

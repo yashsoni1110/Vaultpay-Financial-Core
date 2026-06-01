@@ -6,7 +6,7 @@ const User = require('../models/User');
 const ApiError = require('../utils/apiError');
 const { signAccessToken, signRefreshToken, verifyRefreshToken } = require('../utils/jwt');
 
-// ── Helpers ───────────────────────────────────────────────────
+// Helpers
 const COOKIE_OPTIONS = {
   httpOnly: true,          // JS cannot read — XSS protection
   secure: process.env.NODE_ENV === 'production',
@@ -38,7 +38,7 @@ const sendTokens = async (user, res, statusCode = 200) => {
   });
 };
 
-// ── POST /api/auth/register ────────────────────────────────────
+// POST /api/auth/register
 exports.register = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -61,7 +61,7 @@ exports.register = async (req, res, next) => {
   await sendTokens(user, res, 201);
 };
 
-// ── POST /api/auth/login ───────────────────────────────────────
+// POST /api/auth/login
 exports.login = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -85,7 +85,7 @@ exports.login = async (req, res, next) => {
   await sendTokens(user, res);
 };
 
-// ── POST /api/auth/refresh ─────────────────────────────────────
+// POST /api/auth/refresh
 exports.refresh = async (req, res, next) => {
   const token = req.cookies?.refreshToken;
   if (!token) throw new ApiError(401, 'Refresh token not found.');
@@ -107,7 +107,7 @@ exports.refresh = async (req, res, next) => {
   await sendTokens(user, res);
 };
 
-// ── POST /api/auth/logout ──────────────────────────────────────
+// POST /api/auth/logout
 exports.logout = async (req, res) => {
   // Clear the refresh token from DB
   await User.findByIdAndUpdate(req.user._id, { refreshTokenHash: null });
@@ -115,7 +115,7 @@ exports.logout = async (req, res) => {
   res.json({ success: true, message: 'Logged out successfully.' });
 };
 
-// ── GET /api/auth/me ───────────────────────────────────────────
+// GET /api/auth/me
 exports.getMe = async (req, res) => {
   const user = await User.findById(req.user._id);
   res.json({ success: true, user });

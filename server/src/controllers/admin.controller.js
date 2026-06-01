@@ -8,7 +8,7 @@ const PaymentLink = require('../models/PaymentLink');
 const ApiError = require('../utils/apiError');
 const { getIO } = require('../config/socket');
 
-// ── GET /api/admin/stats ───────────────────────────────────────
+// GET /api/admin/stats
 exports.getStats = async (req, res) => {
   const [
     totalUsers,
@@ -47,7 +47,7 @@ exports.getStats = async (req, res) => {
   });
 };
 
-// ── GET /api/admin/users ───────────────────────────────────────
+// GET /api/admin/users
 exports.getUsers = async (req, res) => {
   const { role, isActive, page = 1, limit = 20, search } = req.query;
   const filter = {};
@@ -70,14 +70,14 @@ exports.getUsers = async (req, res) => {
   res.json({ success: true, data: users, pagination: { total, page: Number(page), pages: Math.ceil(total / Number(limit)) } });
 };
 
-// ── GET /api/admin/users/:id ───────────────────────────────────
+// GET /api/admin/users/:id
 exports.getUser = async (req, res) => {
   const user = await User.findById(req.params.id);
   if (!user) throw new ApiError(404, 'User not found.');
   res.json({ success: true, data: user });
 };
 
-// ── PATCH /api/admin/users/:id/status ─────────────────────────
+// PATCH /api/admin/users/:id/status
 exports.updateUserStatus = async (req, res) => {
   const { isActive } = req.body;
   if (typeof isActive !== 'boolean') {
@@ -106,7 +106,7 @@ exports.updateUserStatus = async (req, res) => {
   });
 };
 
-// ── GET /api/admin/invoices ────────────────────────────────────
+// GET /api/admin/invoices
 exports.getAllInvoices = async (req, res) => {
   const { status, page = 1, limit = 20 } = req.query;
   const filter = {};
@@ -122,7 +122,7 @@ exports.getAllInvoices = async (req, res) => {
   res.json({ success: true, data: invoices, pagination: { total, page: Number(page), pages: Math.ceil(total / Number(limit)) } });
 };
 
-// ── GET /api/admin/payouts ─────────────────────────────────────
+// GET /api/admin/payouts
 exports.getAllPayouts = async (req, res) => {
   const { status, page = 1, limit = 20 } = req.query;
   const filter = {};
@@ -138,7 +138,7 @@ exports.getAllPayouts = async (req, res) => {
   res.json({ success: true, data: payouts, pagination: { total, page: Number(page), pages: Math.ceil(total / Number(limit)) } });
 };
 
-// ── PATCH /api/admin/payouts/:id/status ───────────────────────
+// PATCH /api/admin/payouts/:id/status
 exports.updatePayoutStatus = async (req, res) => {
   const { status, adminNote } = req.body;
   const allowed = ['approved', 'rejected', 'processing', 'completed'];
@@ -165,7 +165,7 @@ exports.updatePayoutStatus = async (req, res) => {
   res.json({ success: true, data: payout, message: `Payout ${status}.` });
 };
 
-// ── GET /api/admin/webhooks ────────────────────────────────────
+// GET /api/admin/webhooks
 exports.getAllWebhooks = async (req, res) => {
   const { status, page = 1, limit = 20 } = req.query;
   const filter = {};

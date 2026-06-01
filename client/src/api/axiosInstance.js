@@ -6,7 +6,7 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// ── Request interceptor — attach access token ─────────────────
+// Request interceptor — attach access token
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('vp_access_token');
   if (token) {
@@ -15,7 +15,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// ── Response interceptor — auto-refresh on 401 ───────────────
+// Response interceptor — auto-refresh on 401
 let isRefreshing = false;
 let failedQueue = [];
 

@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(() => localStorage.getItem('vp_access_token'));
   const [loading, setLoading] = useState(true);
 
-  // ── Set token both in state and localStorage ─────────────────
+  // Set token both in state and localStorage
   const persistToken = useCallback((token) => {
     setAccessToken(token);
     if (token) {
@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ── Fetch current user on mount (if token exists) ─────────────
+  // Fetch current user on mount (if token exists)
   useEffect(() => {
     const init = async () => {
       if (!accessToken) {

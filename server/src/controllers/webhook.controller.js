@@ -31,7 +31,7 @@ exports.receiveWebhook = async (req, res) => {
   let targetUserId   = null;
   let isStripeEvent  = false;
 
-  /* ── 1. Try Stripe webhook verification ──────────────────── */
+  /* 1. Try Stripe webhook verification */
   if (stripeHeader && process.env.STRIPE_WEBHOOK_SECRET) {
     try {
       const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -47,7 +47,7 @@ exports.receiveWebhook = async (req, res) => {
       parsedPayload  = stripeEvent;
       eventType      = stripeEvent.type; // e.g. 'checkout.session.completed'
 
-      /* ── Handle checkout.session.completed ──────────────── */
+      /* Handle checkout.session.completed */
       if (stripeEvent.type === 'checkout.session.completed') {
         const session   = stripeEvent.data.object;
         const invoiceId = session.metadata?.invoiceId;
@@ -83,7 +83,7 @@ exports.receiveWebhook = async (req, res) => {
     }
   }
 
-  /* ── 2. Fall back to custom VaultPay HMAC verification ───── */
+  /* 2. Fall back to custom VaultPay HMAC verification */
   if (!isStripeEvent) {
     try {
       parsedPayload = req.body; // already parsed by express.json
@@ -111,7 +111,7 @@ exports.receiveWebhook = async (req, res) => {
     }
   }
 
-  /* ── 3. Persist the event record ─────────────────────────── */
+  /* 3. Persist the event record */
   const webevent = await WebhookEvent.create({
     userId:         targetUserId,
     eventType:      eventType,

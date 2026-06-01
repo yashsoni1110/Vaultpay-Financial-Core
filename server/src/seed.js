@@ -21,7 +21,7 @@ const seed = async () => {
     ]);
     console.log('🗑️  Cleared existing data');
 
-    // ── Create Admin ──────────────────────────────────────────
+    // Create Admin
     const admin = await User.create({
       firstName: 'Super',
       lastName: 'Admin',
@@ -31,7 +31,7 @@ const seed = async () => {
     });
     console.log(`👑 Admin created: admin@vaultpay.io / Admin@1234`);
 
-    // ── Create Client ─────────────────────────────────────────
+    // Create Client
     const client = await User.create({
       firstName: 'Jane',
       lastName: 'Doe',
@@ -41,7 +41,7 @@ const seed = async () => {
     });
     console.log(`👤 Client created: client@vaultpay.io / Client@1234`);
 
-    // ── Create demo invoices ──────────────────────────────────
+    // Create demo invoices
     await Invoice.create([
       {
         userId: client._id,
@@ -71,7 +71,7 @@ const seed = async () => {
     ]);
     console.log('📄 Demo invoices created');
 
-    // ── Create demo payment link ──────────────────────────────
+    // Create demo payment link
     await PaymentLink.create({
       userId: client._id,
       title: 'Consulting Session',
@@ -81,7 +81,7 @@ const seed = async () => {
     });
     console.log('🔗 Demo payment link created');
 
-    // ── Create demo payout ────────────────────────────────────
+    // Create demo payout
     await Payout.create({
       userId: client._id,
       amount: 2500,

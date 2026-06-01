@@ -45,7 +45,7 @@ const generateInvoicePdf = (invoice) => {
 
       const pageWidth = doc.page.width - 100; // usable width (margins)
 
-      /* ── Header band ──────────────────────────────────────── */
+      /* Header band */
       doc.rect(0, 0, doc.page.width, 110).fill(COLORS.dark);
 
       // Company name
@@ -74,7 +74,7 @@ const generateInvoicePdf = (invoice) => {
         .fontSize(10)
         .text(`# ${invoice.invoiceNumber}`, 0, 65, { align: 'right' });
 
-      /* ── Meta row ─────────────────────────────────────────── */
+      /* Meta row */
       let y = 130;
 
       // Status badge
@@ -107,12 +107,12 @@ const generateInvoicePdf = (invoice) => {
         .fontSize(9)
         .text(`Due Date: ${dueDate}`, 0, y + 14, { align: 'right' });
 
-      /* ── Divider ──────────────────────────────────────────── */
+      /* Divider */
       y += 35;
       doc.moveTo(50, y).lineTo(doc.page.width - 50, y).strokeColor(COLORS.border).lineWidth(1).stroke();
       y += 20;
 
-      /* ── Bill To ──────────────────────────────────────────── */
+      /* Bill To */
       doc
         .fill(COLORS.textMuted)
         .font('Helvetica-Bold')
@@ -133,7 +133,7 @@ const generateInvoicePdf = (invoice) => {
         .fontSize(10)
         .text(invoice.clientEmail, 50, y);
 
-      /* ── Line items table ─────────────────────────────────── */
+      /* Line items table */
       y += 45;
 
       // Table header
@@ -175,7 +175,7 @@ const generateInvoicePdf = (invoice) => {
         y += 28;
       });
 
-      /* ── Total ────────────────────────────────────────────── */
+      /* Total */
       y += 10;
       doc.moveTo(50, y).lineTo(doc.page.width - 50, y).strokeColor(COLORS.border).lineWidth(0.5).stroke();
       y += 15;
@@ -198,7 +198,7 @@ const generateInvoicePdf = (invoice) => {
           0, y, { align: 'right' }
         );
 
-      /* ── Notes ────────────────────────────────────────────── */
+      /* Notes */
       if (invoice.notes) {
         y += 50;
         doc.moveTo(50, y).lineTo(doc.page.width - 50, y).strokeColor(COLORS.border).lineWidth(0.5).stroke();
@@ -216,7 +216,7 @@ const generateInvoicePdf = (invoice) => {
           .text(invoice.notes, 50, y, { width: pageWidth, lineGap: 4 });
       }
 
-      /* ── Footer ───────────────────────────────────────────── */
+      /* Footer */
       const footerY = doc.page.height - 50;
       doc
         .fill(COLORS.textMuted)

@@ -15,7 +15,7 @@ const getStripe = () => {
   return require('stripe')(process.env.STRIPE_SECRET_KEY);
 };
 
-// ── GET /api/invoices ──────────────────────────────────────────
+// GET /api/invoices
 exports.getInvoices = async (req, res) => {
   const { status, page = 1, limit = 10 } = req.query;
   const filter = { userId: req.user._id };
@@ -35,7 +35,7 @@ exports.getInvoices = async (req, res) => {
   });
 };
 
-// ── GET /api/invoices/:id ──────────────────────────────────────
+// GET /api/invoices/:id
 exports.getInvoice = async (req, res) => {
   const invoice = await Invoice.findById(req.params.id);
   if (!invoice) throw new ApiError(404, 'Invoice not found.');
@@ -48,8 +48,8 @@ exports.getInvoice = async (req, res) => {
   res.json({ success: true, data: invoice });
 };
 
-// ── POST /api/invoices ─────────────────────────────────────────
-// Req 1.2 fix: admin can supply targetUserId to assign invoice to a specific client
+// POST /api/invoices
+// Admin can supply targetUserId to assign invoice to a specific client
 exports.createInvoice = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) throw new ApiError(400, 'Validation failed', errors.array());
@@ -87,7 +87,7 @@ exports.createInvoice = async (req, res) => {
   res.status(201).json({ success: true, data: invoice });
 };
 
-// ── PATCH /api/invoices/:id ────────────────────────────────────
+// PATCH /api/invoices/:id
 exports.updateInvoice = async (req, res) => {
   const invoice = await Invoice.findById(req.params.id);
   if (!invoice) throw new ApiError(404, 'Invoice not found.');
@@ -116,7 +116,7 @@ exports.updateInvoice = async (req, res) => {
   res.json({ success: true, data: invoice });
 };
 
-// ── DELETE /api/invoices/:id ───────────────────────────────────
+// DELETE /api/invoices/:id
 exports.deleteInvoice = async (req, res) => {
   const invoice = await Invoice.findById(req.params.id);
   if (!invoice) throw new ApiError(404, 'Invoice not found.');
@@ -134,8 +134,8 @@ exports.deleteInvoice = async (req, res) => {
   res.json({ success: true, message: 'Invoice deleted.' });
 };
 
-// ── POST /api/invoices/:id/pay ─────────────────────────────────
-// Req 2: Creates a Stripe Checkout session. Idempotency key prevents double-charges.
+// POST /api/invoices/:id/pay
+// Creates a Stripe Checkout session. Idempotency key prevents double-charges.
 exports.createCheckoutSession = async (req, res) => {
   const invoice = await Invoice.findById(req.params.id);
   if (!invoice) throw new ApiError(404, 'Invoice not found.');
@@ -192,8 +192,8 @@ exports.createCheckoutSession = async (req, res) => {
   res.json({ success: true, data: { checkoutUrl: session.url, sessionId: session.id } });
 };
 
-// ── GET /api/invoices/:id/pdf ──────────────────────────────────
-// Req 3: Generates PDF and streams it for native browser download
+// GET /api/invoices/:id/pdf
+// Generates PDF and streams it for native browser download
 exports.downloadInvoicePdf = async (req, res) => {
   const invoice = await Invoice.findById(req.params.id);
   if (!invoice) throw new ApiError(404, 'Invoice not found.');

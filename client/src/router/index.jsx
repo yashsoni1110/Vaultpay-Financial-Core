@@ -14,14 +14,14 @@ import AdminUsers from '../pages/admin/AdminUsers';
 import AdminWebhooks from '../pages/admin/AdminWebhooks';
 import AdminPayouts from '../pages/admin/AdminPayouts';
 
-// ── Protected route wrapper ────────────────────────────────────
+// Protected route wrapper
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
   if (loading) return <div className="loading"><div className="spinner" /></div>;
   return user ? children : <Navigate to="/login" replace />;
 };
 
-// ── Admin-only route wrapper ───────────────────────────────────
+// Admin-only route wrapper
 // Requirement 1.5: client hitting /admin/* must see a 403 page — NOT a silent redirect
 const AdminRoute = ({ children }) => {
   const { user, loading, isAdmin } = useAuth();

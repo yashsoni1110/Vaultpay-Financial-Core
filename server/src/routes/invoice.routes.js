@@ -35,10 +35,10 @@ router.get('/:id',    invoiceController.getInvoice);
 router.patch('/:id',  requireRole('admin'), invoiceController.updateInvoice);
 router.delete('/:id', requireRole('admin'), invoiceController.deleteInvoice);
 
-// Req 2: Stripe Checkout — creates session and returns URL
+// Stripe Checkout — creates session and returns URL
 router.post('/:id/pay', invoiceController.createCheckoutSession);
 
-// Req 3: PDF download — streams PDF buffer with attachment header
+// PDF download — streams PDF buffer with attachment header
 router.get('/:id/pdf', invoiceController.downloadInvoicePdf);
 
 module.exports = router;

@@ -104,8 +104,8 @@ export default function Invoices() {
   };
 
   /**
-   * Req 2: Pay Invoice — idiot-proof checkout
-   * - Guards against double-click with per-invoice `paying` state
+   * Pay Invoice
+   * - Prevents duplicate submissions using per-invoice loading state
    * - Button is disabled immediately (HTML level) before async work starts
    * - Idempotency key lives on the backend (Stripe level)
    */
@@ -162,7 +162,7 @@ export default function Invoices() {
                 </td></tr>
               ) : invoices.map((inv) => (
                 <tr key={inv._id}>
-                  {/* Req 3: Invoice number is now a clickable link to the detail page */}
+                  {/* Invoice number is a clickable link to the detail page */}
                   <td>
                     <Link
                       to={`/invoices/${inv._id}`}
@@ -191,7 +191,7 @@ export default function Invoices() {
                         <Eye size={14} />
                       </button>
 
-                      {/* Req 2: Pay Invoice — disabled immediately on click, spinner shown */}
+                      {/* Pay Invoice — disabled immediately on click, spinner shown */}
                       {!isAdmin && inv.status !== 'paid' && inv.status !== 'cancelled' && (
                         <button
                           id={`pay-invoice-${inv._id}`}
@@ -236,7 +236,7 @@ export default function Invoices() {
               <button className="btn btn-secondary btn-icon btn-sm" onClick={() => setShowModal(false)}><X size={16} /></button>
             </div>
             <form id="invoice-form" onSubmit={handleCreate}>
-              {/* Req 1.2: Admin can assign invoice to a specific client */}
+              {/* Admin can assign invoice to a specific client */}
               {isAdmin && (
                 <div className="form-group">
                   <label className="form-label" htmlFor="inv-target-user">Assign to Client</label>

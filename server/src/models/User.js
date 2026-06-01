@@ -59,19 +59,19 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// ── Password hashing ──────────────────────────────────────────
+// Password hashing
 userSchema.pre('save', async function (next) {
   if (!this.isModified('passwordHash')) return next();
   this.passwordHash = await bcrypt.hash(this.passwordHash, 12);
   next();
 });
 
-// ── Instance method: compare password ─────────────────────────
+// Instance method: compare password
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.passwordHash);
 };
 
-// ── Instance method: compare refresh token ────────────────────
+// Instance method: compare refresh token
 userSchema.methods.compareRefreshToken = async function (candidateToken) {
   if (!this.refreshTokenHash) return false;
   return bcrypt.compare(candidateToken, this.refreshTokenHash);
