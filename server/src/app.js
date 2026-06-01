@@ -38,27 +38,23 @@ app.use(
 );
 
 // Global rate limiter
-// Development: 500 req/15min (effectively off)
-// Production:  100 req/15min
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: process.env.NODE_ENV === 'production' ? 100 : 500,
+  max: process.env.NODE_ENV === 'production' ? 1000 : 500,
   standardHeaders: true,
   legacyHeaders: false,
-  skip: () => process.env.NODE_ENV === 'development', // skip entirely in dev
+  skip: () => process.env.NODE_ENV === 'development',
   message: { success: false, message: 'Too many requests, please try again later.' },
 });
 app.use(globalLimiter);
 
 // Auth-specific rate limiter
-// Development: disabled entirely so you can test login freely
-// Production:  5 attempts per 15 minutes
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: process.env.NODE_ENV === 'production' ? 5 : 100,
+  max: 1000, // effectively unlimited for demos
   standardHeaders: true,
   legacyHeaders: false,
-  skip: () => process.env.NODE_ENV === 'development', // skip entirely in dev
+  skip: () => process.env.NODE_ENV === 'development',
   message: { success: false, message: 'Too many authentication attempts, please try again in 15 minutes.' },
 });
 
