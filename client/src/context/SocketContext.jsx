@@ -15,7 +15,7 @@ export function SocketProvider({ children }) {
       // connecting to '/' usually hits the backend when served,
       // but in dev it should point to backend URL if not proxied correctly by socket.io.
       // Socket.io will automatically poll/upgrade.
-      const newSocket = io('/', {
+      const newSocket = io(import.meta.env.VITE_SOCKET_URL || '/', {
         path: '/socket.io',
       });
 
