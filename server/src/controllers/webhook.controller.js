@@ -6,20 +6,7 @@ const Invoice = require('../models/Invoice');
 const ApiError = require('../utils/apiError');
 const { getIO } = require('../config/socket');
 
-/**
- * POST /api/webhooks
- *
- * Handles TWO types of inbound webhooks:
- *
- * 1. Stripe events (checkout.session.completed, etc.)
- *    → Verified via Stripe's own `stripe-signature` header + STRIPE_WEBHOOK_SECRET
- *    → On checkout.session.completed: marks the invoice as "paid"
- *
- * 2. Custom VaultPay events from other integrations
- *    → Verified via HMAC-SHA256 on `x-vaultpay-signature` header
- *
- * Body must be raw buffer (configured in app.js for this path).
- */
+// POST /api/webhooks
 exports.receiveWebhook = async (req, res) => {
   const rawBody       = req.rawBody || req.body;   // raw Buffer from express.json verify
   const stripeHeader  = req.headers['stripe-signature'];
@@ -31,7 +18,7 @@ exports.receiveWebhook = async (req, res) => {
   let targetUserId   = null;
   let isStripeEvent  = false;
 
-  /* 1. Try Stripe webhook verification */
+  // Stripe webhook verification
   if (stripeHeader && process.env.STRIPE_WEBHOOK_SECRET) {
     try {
       const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -47,7 +34,7 @@ exports.receiveWebhook = async (req, res) => {
       parsedPayload  = stripeEvent;
       eventType      = stripeEvent.type; // e.g. 'checkout.session.completed'
 
-      /* Handle checkout.session.completed */
+      // Handle checkout.session.completed
       if (stripeEvent.type === 'checkout.session.completed') {
         const session   = stripeEvent.data.object;
         const invoiceId = session.metadata?.invoiceId;
@@ -83,7 +70,7 @@ exports.receiveWebhook = async (req, res) => {
     }
   }
 
-  /* 2. Fall back to custom VaultPay HMAC verification */
+  // Custom VaultPay HMAC verification
   if (!isStripeEvent) {
     try {
       parsedPayload = req.body; // already parsed by express.json
@@ -111,7 +98,7 @@ exports.receiveWebhook = async (req, res) => {
     }
   }
 
-  /* 3. Persist the event record */
+  // Persist the event record
   const webevent = await WebhookEvent.create({
     userId:         targetUserId,
     eventType:      eventType,

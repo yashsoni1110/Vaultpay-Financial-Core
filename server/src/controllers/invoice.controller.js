@@ -135,7 +135,6 @@ exports.deleteInvoice = async (req, res) => {
 };
 
 // POST /api/invoices/:id/pay
-// Creates a Stripe Checkout session. Idempotency key prevents double-charges.
 exports.createCheckoutSession = async (req, res) => {
   const invoice = await Invoice.findById(req.params.id);
   if (!invoice) throw new ApiError(404, 'Invoice not found.');
@@ -155,8 +154,6 @@ exports.createCheckoutSession = async (req, res) => {
   const stripe = getStripe();
   const clientOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
 
-  // Idempotency key: prevents duplicate Stripe sessions / double-charges
-  // even if the client fires the request twice simultaneously
   const idempotencyKey = `pay_invoice_${invoice._id}_${req.user._id}`;
 
   const session = await stripe.checkout.sessions.create(
@@ -193,7 +190,6 @@ exports.createCheckoutSession = async (req, res) => {
 };
 
 // GET /api/invoices/:id/pdf
-// Generates PDF and streams it for native browser download
 exports.downloadInvoicePdf = async (req, res) => {
   const invoice = await Invoice.findById(req.params.id);
   if (!invoice) throw new ApiError(404, 'Invoice not found.');
