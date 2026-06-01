@@ -13,6 +13,7 @@ node_modules/
 # Stripe CLI & Binaries
 stripe-cli/
 *.exe
+*.zip
 
 # Logs
 logs
